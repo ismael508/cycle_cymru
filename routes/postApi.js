@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const Account = require('../models/accountModel');
+const Account = require('../models/AccountModel');
 
 router.post('/login', async (req, res) => {
     username = req.body.username;

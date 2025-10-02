@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const Account = require('../models/accountModel');
+const Account = require('../models/AccountModel');
 
 router.get('/leaderboard', async (req, res) => {
     try {

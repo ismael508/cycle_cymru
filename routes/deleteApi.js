@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const Account = require('../models/accountModel');
+const Account = require('../models/AccountModel');
 
 router.delete('/delete-account1', (req, res) => {
     const { username } = req.body;

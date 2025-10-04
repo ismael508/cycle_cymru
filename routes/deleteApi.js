@@ -4,7 +4,14 @@ const router = express.Router();
 const Account = require('../models/AccountModel');
 
 router.delete('/delete-account1', (req, res) => {
-    const { username } = req.body;
+    let body = req.body;
+
+    // if body is empty, try parsing the raw text
+    if (!body || Object.keys(body).length === 0) {
+        body = JSON.parse(req.rawBody || '{}'); // only if you store raw body
+    }
+
+    const username = body.username;
 
     try {
         Account.findOneAndDelete({ username });

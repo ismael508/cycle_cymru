@@ -4,8 +4,15 @@ const router = express.Router();
 const Account = require('../models/AccountModel');
 
 router.post('/login', async (req, res) => {
-    username = req.body.username;
-    password = req.body.password;
+    let body = req.body;
+
+    // if body is empty, try parsing the raw text
+    if (!body || Object.keys(body).length === 0) {
+        body = JSON.parse(req.rawBody || '{}'); // only if you store raw body
+    }
+
+    const username = body.username;
+    const password = body.password;
 
     try {
         let account = await Account.findOne({username, password});
@@ -20,7 +27,15 @@ router.post('/login', async (req, res) => {
 })
 
 router.post('/register', async (req, res) => {
-    const { username, password } = req.body;
+    let body = req.body;
+
+    // if body is empty, try parsing the raw text
+    if (!body || Object.keys(body).length === 0) {
+        body = JSON.parse(req.rawBody || '{}'); // only if you store raw body
+    }
+
+    const username = body.username;
+    const password = body.password;
 
     try {
         let existingAccount = await Account.findOne({ username, password });
@@ -44,7 +59,15 @@ router.post('/register', async (req, res) => {
 })
 
 router.post('/update-data1', (req, res) => {
-    const { username, levels_completed } = req.body;
+    let body = req.body;
+
+    // if body is empty, try parsing the raw text
+    if (!body || Object.keys(body).length === 0) {
+        body = JSON.parse(req.rawBody || '{}'); // only if you store raw body
+    }
+
+    const username = body.username;
+    const levels_completed = body.levels_completed;
 
     try {
         Account.findOneAndUpdate({ username }, { levels_completed }, { new: true });

@@ -27,8 +27,8 @@ POST https://cycle-cymru.onrender.com/register
 Content-Type: application/json
 
 {
-  "username": "testuser2",
-  "password": "testpassword1"
+  "username": "testuser",
+  "password": "testpassword"
 }
 
 ###

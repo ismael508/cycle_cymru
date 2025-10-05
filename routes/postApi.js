@@ -17,7 +17,7 @@ router.post('/login', async (req, res) => {
     try {
         let account = await Account.findOne({username, password});
         if (!account){
-            return res.status(401).json({message: 'Invalid credentials'});
+            return res.status(401).json({message: 'Invalid credentials', data_sent: body});
         }
         res.status(200).json({message: 'Login successful', account});
     } catch (err) {

@@ -11,6 +11,7 @@ const postApi = require('./routes/postApi')
 const getApi = require('./routes/getApi')
 const deleteApi = require('./routes/deleteApi')
 
+app.use(express.text({ type: '*/*' }));
 app.use(express.json());
 app.use(cors());
 

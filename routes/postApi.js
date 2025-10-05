@@ -47,52 +47,69 @@ router.post('/login', async (req, res) => {
 router.post('/register', async (req, res) => {
     let body = req.body;
 
-    // if body is empty, try parsing the raw text
-    if (!body || Object.keys(body).length === 0) {
-        body = JSON.parse(req.rawBody || '{}'); // only if you store raw body
+    // parse if raw text (GML)
+    if (typeof body === 'string') {
+        try {
+            body = JSON.parse(body);
+        } catch (err) {
+            console.error('❌ Invalid JSON body:', err);
+            return res.status(400).json({ message: 'Invalid JSON format' });
+        }
     }
 
-    const username = body.username;
-    const password = body.password;
+    if (!body || Object.keys(body).length === 0) {
+        return res.status(400).json({ message: 'Missing request body' });
+    }
+
+    const { username, password } = body;
 
     try {
-        let existingAccount = await Account.findOne({ username, password });
+        const existingAccount = await Account.findOne({ username, password });
         if (existingAccount) {
             return res.status(400).json({ message: 'Account already exists' });
         }
-    } catch (err) {
-        console.error(err);
-        return res.status(500).json({message: 'Server error'});
-    }
 
-    const newAccount = new Account({ username, password, levels_completed: 0 });
-
-    try {
+        const newAccount = new Account({ username, password, levels_completed: 0 });
         await newAccount.save();
+
         res.status(201).json({ message: 'Account created successfully', newAccount });
     } catch (err) {
-        console.error(err);
+        console.error('⚠️ Server error:', err);
         res.status(500).json({ message: 'Server error' });
     }
-})
+});
 
-router.post('/update-data1', (req, res) => {
+router.post('/update-data1', async (req, res) => {
     let body = req.body;
 
-    // if body is empty, try parsing the raw text
-    if (!body || Object.keys(body).length === 0) {
-        body = JSON.parse(req.rawBody || '{}'); // only if you store raw body
+    if (typeof body === 'string') {
+        try {
+            body = JSON.parse(body);
+        } catch (err) {
+            console.error('❌ Invalid JSON body:', err);
+            return res.status(400).json({ message: 'Invalid JSON format' });
+        }
     }
 
-    const username = body.username;
-    const levels_completed = body.levels_completed;
+    if (!body || Object.keys(body).length === 0) {
+        return res.status(400).json({ message: 'Missing request body' });
+    }
+
+    const { username, levels_completed } = body;
 
     try {
-        Account.findOneAndUpdate({ username }, { levels_completed }, { new: true });
+        const updated = await Account.findOneAndUpdate(
+            { username },
+            { levels_completed },
+            { new: true }
+        );
+
+        if (!updated) return res.status(404).json({ message: 'Account not found' });
+        res.status(200).json({ message: 'Data updated successfully', updated });
     } catch (err) {
-        console.error(err);
-        res.status(500).json({message: 'Server error'});
+        console.error('⚠️ Server error:', err);
+        res.status(500).json({ message: 'Server error' });
     }
-})
+});
 
 module.exports = router;

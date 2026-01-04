@@ -95,12 +95,16 @@ router.post('/update-data1', async (req, res) => {
         return res.status(400).json({ message: 'Missing request body' });
     }
 
-    const { username, levels_completed } = body;
+    const { username, levels_completed, password, secret_key } = body;
+
+    if (secret_key !== process.env.SECRET_KEY) {
+        return res.status(403).json({ message: 'Invalid secret key' });
+    }
 
     try {
         const updated = await Account.findOneAndUpdate(
             { username },
-            { levels_completed },
+            password === undefined ? { levels_completed } : { password },
             { new: true }
         );
 

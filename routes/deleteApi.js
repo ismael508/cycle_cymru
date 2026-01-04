@@ -19,7 +19,11 @@ router.delete('/delete-account1', async (req, res) => {
         return res.status(400).json({ message: 'Missing request body' });
     }
 
-    const { username } = body;
+    const { username, secret_key } = body;
+
+    if (secret_key !== process.env.SECRET_KEY) {
+        return res.status(403).json({ message: 'Invalid secret key' });
+    }
 
     try {
         const deleted = await Account.findOneAndDelete({ username });

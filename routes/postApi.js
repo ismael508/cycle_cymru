@@ -98,7 +98,7 @@ router.post('/update-data1', async (req, res) => {
     const { username, levels_completed, password, secret_key } = body;
 
     if (secret_key !== process.env.SECRET_KEY) {
-        return res.status(403).json({ message: 'Invalid secret key' });
+        return res.status(403).json({ message: `1: ${secret_key}, 2: ${process.env.SECRET_KEY}` });
     }
 
     try {

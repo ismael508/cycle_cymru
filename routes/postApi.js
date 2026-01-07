@@ -102,9 +102,14 @@ router.post('/update-data1', async (req, res) => {
     }
 
     try {
+        const updateData = {};
+
+        if (password !== undefined) updateData.password = password;
+        if (levels_completed !== undefined) updateData.levels_completed = levels_completed;
+
         const updated = await Account.findOneAndUpdate(
             { username },
-            password === undefined ? { levels_completed } : { password },
+            updateData,
             { new: true }
         );
 
